@@ -13,7 +13,7 @@ export const Sidebar = ({ className, children, ...props }: ComponentProps<'aside
   return (
     <aside className={twMerge('w-[250px] h-screen overflow-auto flex flex-col')} {...props}>
       {/* 操作栏容器 */}
-      <div className="w-full h-10 border-b border-white/20 flex justify-start items-center px-3 sticky top-0 z-10">
+      <div className="w-full h-8 border-b border-white/20 flex justify-start items-center px-3 sticky top-0 z-10">
         {/* 操作栏按钮 */}
         <button className="text-white mr-2">─</button>
         <button className="text-white mr-2">口</button>
