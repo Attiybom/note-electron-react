@@ -1,33 +1,23 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
+import {
+  ActionButtonContainer,
+  Content,
+  DraggableTopBar,
+  NotePreviewList,
+  RootLayout,
+  Sidebar
+} from './components'
 
-function App(): JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
-
+const App = () => {
   return (
     <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-        &nbsp;and <span className="ts">TypeScript</span>
-      </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a>
-        </div>
-      </div>
-      <Versions></Versions>
+      <DraggableTopBar></DraggableTopBar>
+      <RootLayout>
+        <Sidebar className="p-2">
+          <ActionButtonContainer className="flex justify-between items-center mt-1" />
+          <NotePreviewList className="mt-3 space-y-2" />
+        </Sidebar>
+        <Content className="border-l bg-zinc-900/50 border-l-white/20">暂无内容</Content>
+      </RootLayout>
     </>
   )
 }
