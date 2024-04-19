@@ -7,6 +7,7 @@ if (!process.contextIsolated) {
 try {
   contextBridge.exposeInMainWorld('context', {
     //TODO: add your exposed functions here
+    locale: navigator.language
   })
 } catch (error) {
   console.error('Failed to expose context:', error)
