@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import {
   ActionButtonContainer,
   Content,
@@ -10,15 +11,22 @@ import {
 } from './components'
 
 const App = () => {
+  const contentContainerRef = useRef<HTMLDivElement>(null)
+
+  const resetScroll = () => {
+    contentContainerRef.current?.scrollTo(0, 0)
+  }
+
   return (
     <>
       <DraggableTopBar></DraggableTopBar>
       <RootLayout>
         <Sidebar className="p-2">
           <ActionButtonContainer className="flex justify-between items-center mt-1" />
-          <NotePreviewList className="mt-3 space-y-2" />
+          <NotePreviewList className="mt-3 space-y-2" onSelect={resetScroll} />
         </Sidebar>
-        <Content className="border-l bg-zinc-900/50 border-l-white/20">
+
+        <Content ref={contentContainerRef} className="border-l bg-zinc-900/50 border-l-white/20">
           <FloatingNoteTitle className="pt-2"></FloatingNoteTitle>
           <MarkdownContentEdit></MarkdownContentEdit>
         </Content>
