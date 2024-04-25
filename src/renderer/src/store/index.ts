@@ -15,7 +15,7 @@ export const notesAtom = unwrap(notesAtomAsync, (prev) => prev)
 
 export const selectedNoteIndexAtom = atom<number | null>(null)
 
-const selectedNoteAtomAsync = atom<NoteInfo | null>(async (get) => {
+const selectedNoteAtomAsync = atom(async (get) => {
   const notes = get(notesAtom)
   const selectedNoteIndex = get(selectedNoteIndexAtom)
 
@@ -54,7 +54,7 @@ export const saveNoteAtom = atom(null, async (get, set, newContent: NoteContent)
 
   // update note's last edit time
   set(
-    selectedNoteAtom,
+    notesAtom,
     notes.map((note) => {
       if (note.title === selectedNote.title) {
         return {
