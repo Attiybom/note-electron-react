@@ -6,6 +6,10 @@ declare global {
     context: {
       locale: string
       getNotes: GetNotes
+      readNote: ReadNote
+      writeNote: WriteNote
+      createNote: CreateNote
+      deleteNote: DeleteNote
     }
   }
 }
