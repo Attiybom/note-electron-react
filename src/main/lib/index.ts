@@ -3,7 +3,12 @@ import { ensureDir, readFile, readdir, remove, stat, writeFile } from 'fs-extra'
 import { homedir } from 'os'
 import path from 'path'
 import { NoteInfo } from 'src/renderer/src/shared/models'
-import { appDirectoryName, fileEncoding } from '../../renderer/src/shared/constants'
+import welcomeNoet from '../../../resources/welcomeNote.md?asset'
+import {
+  appDirectoryName,
+  fileEncoding,
+  welcomeNoteFileName
+} from '../../renderer/src/shared/constants'
 import { CreateNote, GetNotes, ReadNote } from '../../renderer/src/shared/types'
 
 export const getRootDir = () => {
@@ -21,6 +26,21 @@ export const getNotes: GetNotes = async () => {
   })
 
   const notes = notesFileNames.filter((fileName) => fileName.endsWith('.md'))
+
+  if (notes.length === 0) {
+    console.log(`No notes found in ${rootDir}`)
+
+    const content = await readFile(welcomeNoet, {
+      encoding: fileEncoding
+    })
+
+    // create welcome note
+    await writeFile(`${rootDir}/${welcomeNoteFileName}`, content, {
+      encoding: fileEncoding
+    })
+
+    notes.push(welcomeNoteFileName)
+  }
 
   return Promise.all(notes.map(getNoteInfoFromFileName))
 }
