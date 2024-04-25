@@ -1,11 +1,13 @@
-import { ensureDir, readFile, readdir, stat } from 'fs-extra'
+import { dialog } from 'electron'
+import { ensureDir, readFile, readdir, stat, writeFile } from 'fs-extra'
 import { homedir } from 'os'
+import path from 'path'
 import { NoteInfo } from 'src/renderer/src/shared/models'
 import { appDirectoryName, fileEncoding } from '../../renderer/src/shared/constants'
-import { GetNotes, ReadNote } from '../../renderer/src/shared/types'
+import { CreateNote, GetNotes, ReadNote } from '../../renderer/src/shared/types'
 
 export const getRootDir = () => {
-  return `${homedir()}/${appDirectoryName}`
+  return path.join(homedir(), appDirectoryName)
 }
 
 export const getNotes: GetNotes = async () => {
@@ -38,4 +40,54 @@ export const readNote: ReadNote = async (fileName) => {
   return await readFile(`${rootDir}/${fileName}.md`, {
     encoding: fileEncoding
   })
+}
+
+export const writeNote = async (fileName, content) => {
+  const rootDir = getRootDir()
+
+  await ensureDir(rootDir)
+
+  console.log(`Writing note ${fileName}`)
+
+  await writeFile(`${rootDir}/${fileName}.md`, content, {
+    encoding: fileEncoding
+  })
+}
+
+export const createNote: CreateNote = async () => {
+  const rootDir = getRootDir()
+  await ensureDir(rootDir)
+
+  const { filePath, canceled } = await dialog.showSaveDialog({
+    title: `New Note`,
+    defaultPath: `${rootDir}\\untitled.md`,
+    buttonLabel: `Create`,
+    properties: [`showOverwriteConfirmation`],
+    showsTagField: false,
+    filters: [{ name: 'Markdown', extensions: ['md'] }]
+  })
+
+  if (canceled || !filePath) {
+    console.log('Note creation canceled')
+    return false
+  }
+
+  const { name: fileName, dir: parentDir } = path.parse(filePath)
+
+  if (path.normalize(parentDir) !== rootDir) {
+    await dialog.showMessageBox({
+      type: 'error',
+      title: `Creation Failed`,
+      message: `Note must be saved in ${rootDir}`
+    })
+
+    return false
+  }
+
+  console.log(`Creating note ${filePath}`)
+  await writeFile(filePath, '', {
+    encoding: fileEncoding
+  })
+
+  return fileName
 }

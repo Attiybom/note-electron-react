@@ -1,8 +1,8 @@
-import { getNotes, readNote } from '@/lib'
+import { createNote, getNotes, readNote, writeNote } from '@/lib'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import { BrowserWindow, app, ipcMain, shell } from 'electron'
 import { join } from 'path'
-import { GetNotes, ReadNote } from 'src/renderer/src/shared/types'
+import { CreateNote, GetNotes, ReadNote, WriteNote } from 'src/renderer/src/shared/types'
 import icon from '../../resources/icon.png?asset'
 
 function createWindow(): void {
@@ -63,6 +63,8 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.handle('getNotes', (_, ...args: Parameters<GetNotes>) => getNotes(...args))
   ipcMain.handle('readNote', (_, ...args: Parameters<ReadNote>) => readNote(...args))
+  ipcMain.handle('writeNote', (_, ...args: Parameters<WriteNote>) => writeNote(...args))
+  ipcMain.handle(`createNote`, (_, ...args: Parameters<CreateNote>) => createNote(...args))
 
   createWindow()
 
